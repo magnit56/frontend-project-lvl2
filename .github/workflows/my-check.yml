@@ -1,0 +1,26 @@
+name: my-check
+
+on:
+  push:
+    branches: [ main, develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Git clone
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: npm install
+        run: npm install
+
+      - name: Run a multi-line script
+        run: |
+          make install
+          make lint
