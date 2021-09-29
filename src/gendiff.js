@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import _ from 'lodash';
-import { sort } from 'fast-sort';
 import parse from './parse.js';
 import render from './formatters/index.js';
 
@@ -37,7 +36,7 @@ const getAst = (before, after) => {
   const beforeKeys = Object.keys(before);
   const afterKeys = Object.keys(after);
   const unionKeys = _.uniq(beforeKeys.concat(afterKeys));
-  const sortedKeys = sort(unionKeys).asc();
+  const sortedKeys = _.sortBy(unionKeys);
 
   const ast = sortedKeys.map((key) => {
     if (isAdded(before, after, key)) {
