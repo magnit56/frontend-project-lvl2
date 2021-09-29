@@ -8,3 +8,5 @@ lint:
 	npx eslint bin/ src/
 lint-fix:
 	npx eslint --fix bin/ src/
+test:
+	npx jest
