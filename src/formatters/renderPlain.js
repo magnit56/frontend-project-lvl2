@@ -2,7 +2,8 @@ import _ from 'lodash';
 
 export default (ast) => {
   const iter = (ast, parents) => {
-    let propertyFullName, value, beforeValue, afterValue, propertyName, childrenParents;
+    let propertyFullName; let value; let beforeValue; let afterValue; let propertyName; let
+      childrenParents;
     const parts = ast.map((part) => {
       switch (part.type) {
         case 'added':
@@ -26,9 +27,9 @@ export default (ast) => {
       }
     });
     return _.filter(parts).join('\n');
-  }
+  };
   return iter(ast, []);
-}
+};
 
 const getStringValue = (value) => {
   const type = typeof value;
@@ -47,8 +48,6 @@ const getStringValue = (value) => {
     default:
       return value.toString();
   }
-}
+};
 
-const getPropertyFullName = (propertyName, parents) => {
-  return [...parents, propertyName].join('.');
-}
+const getPropertyFullName = (propertyName, parents) => [...parents, propertyName].join('.');

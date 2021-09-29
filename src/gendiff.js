@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 import _ from 'lodash';
+import { sort } from 'fast-sort';
 import parse from './parse.js';
 import render from './formatters/index.js';
-import { sort } from 'fast-sort';
 
 const FORMATS = ['stylish', 'plain', 'json'];
 
@@ -59,7 +59,7 @@ const getAst = (before, after) => {
       return {
         name: key,
         type: 'nested',
-        children: children,
+        children,
       };
     }
     if (isChanged(before, after, key)) {
@@ -84,7 +84,7 @@ const getAst = (before, after) => {
 const isNested = (elem1, elem2, key) => {
   const keyStatus = elem1.hasOwnProperty(key) && elem2.hasOwnProperty(key);
   return keyStatus ? (customIsObject(elem1[key]) && customIsObject(elem2[key])) : false;
-}
+};
 
 const isAdded = (elem1, elem2, key) => {
   const keyStatus = !elem1.hasOwnProperty(key) && elem2.hasOwnProperty(key);
@@ -106,15 +106,13 @@ const isUnchanged = (elem1, elem2, key) => {
   return keyStatus ? customEqual(elem1[key], elem2[key]) : false;
 };
 
-const customIsObject = (elem) => {
-  return elem.toString() === '[object Object]';
-};
+const customIsObject = (elem) => elem.toString() === '[object Object]';
 
 const customEqual = (elem1, elem2) => {
   if (Array.isArray(elem1) && Array.isArray(elem2)) {
     return _.difference(elem1, elem2).length === 0;
   }
   return elem1 === elem2;
-}
+};
 
 export default genDiff;

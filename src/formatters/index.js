@@ -7,6 +7,6 @@ export default (ast, format) => {
     json: renderJson,
     stylish: renderStylish,
     plain: renderPlain,
-  }
+  };
   return mapping[format](ast);
-}
+};

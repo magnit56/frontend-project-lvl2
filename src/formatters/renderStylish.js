@@ -6,32 +6,33 @@ export default (ast) => {
     const bracketIndent = depthIndent;
 
     const parts = ast.map((part) => {
-      let value, before, after, beforeValue, afterValue, children;
+      let value; let before; let after; let beforeValue; let afterValue; let
+        children;
       switch (part.type) {
         case 'added':
           value = stringify(part.value, depth + 1);
-          return indent + `+ ${part.name}: ${value}`;
+          return `${indent}+ ${part.name}: ${value}`;
         case 'deleted':
           value = stringify(part.value, depth + 1);
-          return indent + `- ${part.name}: ${value}`;
+          return `${indent}- ${part.name}: ${value}`;
         case 'unchanged':
           value = stringify(part.value, depth + 1);
-          return indent + `  ${part.name}: ${value}`;
+          return `${indent}  ${part.name}: ${value}`;
         case 'changed':
           beforeValue = stringify(part.beforeValue, depth + 1);
           afterValue = stringify(part.afterValue, depth + 1);
-          before = indent + `- ${part.name}: ${beforeValue}`;
-          after = indent + `+ ${part.name}: ${afterValue}`;
+          before = `${indent}- ${part.name}: ${beforeValue}`;
+          after = `${indent}+ ${part.name}: ${afterValue}`;
           return [before, after].join('\n');
         case 'nested':
           children = iter(part.children, depth + 1);
-          return indent + `  ${part.name}: ` + children;
+          return `${indent}  ${part.name}: ${children}`;
       }
     });
     return ['{', ...parts, `${bracketIndent}}`].join('\n');
-  }
+  };
   return iter(ast, 1);
-}
+};
 
 const stringify = (part, depth) => {
   const type = typeof part;
@@ -60,4 +61,4 @@ const stringify = (part, depth) => {
     default:
       return part.toString();
   }
-}
+};

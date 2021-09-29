@@ -7,6 +7,6 @@ const parse = (data, extension) => {
     '.json': JSON.parse,
   };
   return mapping[extension](data);
-}
+};
 
 export default parse;
