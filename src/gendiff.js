@@ -109,6 +109,9 @@ const customIsObject = (elem) => {
   if (typeof elem !== 'object') {
     return false;
   }
+  if (elem === null) {
+    return false;
+  }
   return elem.toString() === '[object Object]';
 }
 
