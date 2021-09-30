@@ -113,7 +113,7 @@ const customIsObject = (elem) => {
     return false;
   }
   return elem.toString() === '[object Object]';
-}
+};
 
 const customEqual = (elem1, elem2) => {
   if (Array.isArray(elem1) && Array.isArray(elem2)) {
