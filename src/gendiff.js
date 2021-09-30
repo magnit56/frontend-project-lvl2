@@ -105,7 +105,12 @@ const isUnchanged = (elem1, elem2, key) => {
   return keyStatus ? customEqual(elem1[key], elem2[key]) : false;
 };
 
-const customIsObject = (elem) => elem.toString() === '[object Object]';
+const customIsObject = (elem) => {
+  if (typeof elem !== 'object') {
+    return false;
+  }
+  return elem.toString() === '[object Object]';
+}
 
 const customEqual = (elem1, elem2) => {
   if (Array.isArray(elem1) && Array.isArray(elem2)) {
