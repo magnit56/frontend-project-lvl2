@@ -6,6 +6,48 @@ import render from './formatters/index.js';
 
 const FORMATS = ['stylish', 'plain', 'json'];
 
+const customEqual = (elem1, elem2) => {
+  if (Array.isArray(elem1) && Array.isArray(elem2)) {
+    return _.difference(elem1, elem2).length === 0;
+  }
+  return elem1 === elem2;
+};
+
+const customIsObject = (elem) => {
+  if (typeof elem !== 'object') {
+    return false;
+  }
+  if (elem === null) {
+    return false;
+  }
+  return elem.toString() === '[object Object]';
+};
+
+const isNested = (elem1, elem2, key) => {
+  const keyStatus = Object.prototype.hasOwnProperty.call(elem1, key) && Object.prototype.hasOwnProperty.call(elem2, key);
+  return keyStatus ? (customIsObject(elem1[key]) && customIsObject(elem2[key])) : false;
+};
+
+const isAdded = (elem1, elem2, key) => {
+  const keyStatus = !Object.prototype.hasOwnProperty.call(elem1, key) && Object.prototype.hasOwnProperty.call(elem2, key);
+  return keyStatus;
+};
+
+const isDeleted = (elem1, elem2, key) => {
+  const keyStatus = Object.prototype.hasOwnProperty.call(elem1, key) && !Object.prototype.hasOwnProperty.call(elem2, key);
+  return keyStatus;
+};
+
+const isChanged = (elem1, elem2, key) => {
+  const keyStatus = Object.prototype.hasOwnProperty.call(elem1, key) && Object.prototype.hasOwnProperty.call(elem2, key);
+  return keyStatus ? !customEqual(elem1[key], elem2[key]) : false;
+};
+
+const isUnchanged = (elem1, elem2, key) => {
+  const keyStatus = Object.prototype.hasOwnProperty.call(elem1, key) && Object.prototype.hasOwnProperty.call(elem2, key);
+  return keyStatus ? customEqual(elem1[key], elem2[key]) : false;
+};
+
 const genDiff = (filepath1, filepath2, format = 'stylish') => {
   if (!FORMATS.includes(format)) {
     return 'Такой формат не поддерживается';
@@ -78,48 +120,6 @@ const getAst = (before, after) => {
     }
   });
   return ast;
-};
-
-const isNested = (elem1, elem2, key) => {
-  const keyStatus = elem1.hasOwnProperty(key) && elem2.hasOwnProperty(key);
-  return keyStatus ? (customIsObject(elem1[key]) && customIsObject(elem2[key])) : false;
-};
-
-const isAdded = (elem1, elem2, key) => {
-  const keyStatus = !elem1.hasOwnProperty(key) && elem2.hasOwnProperty(key);
-  return keyStatus;
-};
-
-const isDeleted = (elem1, elem2, key) => {
-  const keyStatus = elem1.hasOwnProperty(key) && !elem2.hasOwnProperty(key);
-  return keyStatus;
-};
-
-const isChanged = (elem1, elem2, key) => {
-  const keyStatus = elem1.hasOwnProperty(key) && elem2.hasOwnProperty(key);
-  return keyStatus ? !customEqual(elem1[key], elem2[key]) : false;
-};
-
-const isUnchanged = (elem1, elem2, key) => {
-  const keyStatus = elem1.hasOwnProperty(key) && elem2.hasOwnProperty(key);
-  return keyStatus ? customEqual(elem1[key], elem2[key]) : false;
-};
-
-const customIsObject = (elem) => {
-  if (typeof elem !== 'object') {
-    return false;
-  }
-  if (elem === null) {
-    return false;
-  }
-  return elem.toString() === '[object Object]';
-};
-
-const customEqual = (elem1, elem2) => {
-  if (Array.isArray(elem1) && Array.isArray(elem2)) {
-    return _.difference(elem1, elem2).length === 0;
-  }
-  return elem1 === elem2;
 };
 
 export default genDiff;

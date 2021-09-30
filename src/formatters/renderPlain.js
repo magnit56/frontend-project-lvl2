@@ -23,8 +23,6 @@ const getStringValue = (value) => {
 
 export default (tree) => {
   const iter = (ast, parents) => {
-    // let value; let beforeValue; let afterValue; let propertyName; let
-    //   childrenParents;
     const parts = ast.map((part) => {
       switch (part.type) {
         case 'added':
