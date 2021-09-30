@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from "fs";
-import genDiff from '../src/gendiff.js';
+import genDiff from '../index.js';
 
 let extensions, formats;
 
