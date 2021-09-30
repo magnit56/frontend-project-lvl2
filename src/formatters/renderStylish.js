@@ -3,28 +3,29 @@ const stringify = (part, depth) => {
   if (part === null) {
     return 'null';
   }
-  switch (type) {
-    case 'string':
-      return part;
-    case 'undefined':
-      return 'undefined';
-    case 'boolean':
-      return part.toString();
-    case 'object':
-      const baseIndent = '  ';
-      const depthIndent = '    '.repeat(depth - 1);
-      const indent = baseIndent + depthIndent;
-      const bracketIndent = depthIndent;
-
-      const map = new Map(Object.entries(part));
-      const elements = Array.from(map).map(([key, value]) => {
-        const item = stringify(value, depth + 1);
-        return `${indent}  ${key}: ${item}`;
-      });
-      return ['{', ...elements, `${bracketIndent}}`].join('\n');
-    default:
-      return part.toString();
+  if (type === 'string') {
+    return part;
   }
+  if (type === 'undefined') {
+    return 'undefined';
+  }
+  if (type === 'boolean') {
+    return part.toString();
+  }
+  if (type === 'object') {
+    const baseIndent = '  ';
+    const depthIndent = '    '.repeat(depth - 1);
+    const indent = baseIndent + depthIndent;
+    const bracketIndent = depthIndent;
+
+    const map = new Map(Object.entries(part));
+    const elements = Array.from(map).map(([key, value]) => {
+      const item = stringify(value, depth + 1);
+      return `${indent}  ${key}: ${item}`;
+    });
+    return ['{', ...elements, `${bracketIndent}}`].join('\n');
+  }
+  return part.toString();
 };
 
 export default (tree) => {
@@ -35,30 +36,30 @@ export default (tree) => {
     const bracketIndent = depthIndent;
 
     const parts = ast.map((part) => {
-      // let value; let before; let after; let beforeValue; let afterValue; let
-      //   children;
-      switch (part.type) {
-        case 'added':
-          const valueAdded = stringify(part.value, depth + 1);
-          return `${indent}+ ${part.name}: ${valueAdded}`;
-        case 'deleted':
-          const valueDeleted = stringify(part.value, depth + 1);
-          return `${indent}- ${part.name}: ${valueDeleted}`;
-        case 'unchanged':
-          const valueUnchanged = stringify(part.value, depth + 1);
-          return `${indent}  ${part.name}: ${valueUnchanged}`;
-        case 'changed':
-          const beforeValue = stringify(part.beforeValue, depth + 1);
-          const afterValue = stringify(part.afterValue, depth + 1);
-          const before = `${indent}- ${part.name}: ${beforeValue}`;
-          const after = `${indent}+ ${part.name}: ${afterValue}`;
-          return [before, after].join('\n');
-        case 'nested':
-          const children = iter(part.children, depth + 1);
-          return `${indent}  ${part.name}: ${children}`;
-        default:
-          throw new Error('Этого не может быть!');
+      if (part.type === 'added') {
+        const valueAdded = stringify(part.value, depth + 1);
+        return `${indent}+ ${part.name}: ${valueAdded}`;
       }
+      if (part.type === 'deleted') {
+        const valueDeleted = stringify(part.value, depth + 1);
+        return `${indent}- ${part.name}: ${valueDeleted}`;
+      }
+      if (part.type === 'unchanged') {
+        const valueUnchanged = stringify(part.value, depth + 1);
+        return `${indent}  ${part.name}: ${valueUnchanged}`;
+      }
+      if (part.type === 'changed') {
+        const beforeValue = stringify(part.beforeValue, depth + 1);
+        const afterValue = stringify(part.afterValue, depth + 1);
+        const before = `${indent}- ${part.name}: ${beforeValue}`;
+        const after = `${indent}+ ${part.name}: ${afterValue}`;
+        return [before, after].join('\n');
+      }
+      if (part.type === 'nested') {
+        const children = iter(part.children, depth + 1);
+        return `${indent}  ${part.name}: ${children}`;
+      }
+      throw new Error('Этого не может быть!');
     });
     return ['{', ...parts, `${bracketIndent}}`].join('\n');
   };
