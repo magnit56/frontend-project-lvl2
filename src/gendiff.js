@@ -6,7 +6,7 @@ import render from './formatters/index.js';
 
 const FORMATS = ['stylish', 'plain', 'json'];
 
-const genDiff = (filepath1, filepath2, format) => {
+const genDiff = (filepath1, filepath2, format = 'stylish') => {
   if (!FORMATS.includes(format)) {
     return 'Такой формат не поддерживается';
   }
