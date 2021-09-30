@@ -42,7 +42,7 @@ export default (tree) => {
           const childrenParents = [...parents, propertyName];
           return iter(part.children, childrenParents);
         default:
-          return '';
+          throw new Error('Этого не может быть!');
       }
     });
     return _.filter(parts).join('\n');
