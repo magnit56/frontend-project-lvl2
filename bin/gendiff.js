@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-// import run from '../index.js';
 import commander from 'commander';
 import gendiff from '../src/gendiff.js';
 
